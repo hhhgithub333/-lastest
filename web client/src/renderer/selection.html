@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+        }
+        body {
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            cursor: crosshair;
+            position: relative;
+        }
+        /* 遮罩层 */
+        .mask {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            pointer-events: none;
+        }
+        /* 选区框 */
+        .selection-box {
+            position: fixed;
+            border: 2px solid #4CAF50;
+            background: rgba(76, 175, 80, 0.1);
+            box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.6);
+            pointer-events: none;
+            display: none;
+        }
+        /* 选区信息 */
+        .selection-info {
+            position: fixed;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-family: monospace;
+            pointer-events: none;
+            z-index: 100;
+        }
+        /* 操作提示 */
+        .instructions {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            pointer-events: none;
+            z-index: 100;
+        }
+        .instructions span {
+            color: #4CAF50;
+        }
+    </style>
+</head>
+<body>
+    <div class="mask"></div>
+    <div class="selection-box" id="selectionBox"></div>
+    <div class="selection-info" id="selectionInfo"></div>
+    <div class="instructions">
+        🖱️ 拖拽鼠标选择区域 | <span>ESC</span> 取消 | <span>Enter</span> 确认
+    </div>
+
+    <script>
+        const selectionBox = document.getElementById('selectionBox');
+        const selectionInfo = document.getElementById('selectionInfo');
+        
+        let startX = 0, startY = 0;
+        let isSelecting = false;
+        let currentBox = null;
+
+        // 更新选区显示
+        function updateSelection(x, y, w, h) {
+            if (w > 0 && h > 0) {
+                selectionBox.style.display = 'block';
+                selectionBox.style.left = x + 'px';
+                selectionBox.style.top = y + 'px';
+                selectionBox.style.width = w + 'px';
+                selectionBox.style.height = h + 'px';
+                
+                selectionInfo.style.display = 'block';
+                selectionInfo.style.left = (x + 10) + 'px';
+                selectionInfo.style.top = (y + 10) + 'px';
+                selectionInfo.textContent = `${w} × ${h}`;
+            } else {
+                selectionBox.style.display = 'none';
+                selectionInfo.style.display = 'none';
+            }
+        }
+
+        // 鼠标按下
+        document.addEventListener('mousedown', (e) => {
+            if (e.button !== 0) return;
+            startX = e.clientX;
+            startY = e.clientY;
+            isSelecting = true;
+            
+            // 创建临时选区
+            currentBox = { x: startX, y: startY, w: 0, h: 0 };
+            updateSelection(startX, startY, 0, 0);
+        });
+
+        // 鼠标移动
+        document.addEventListener('mousemove', (e) => {
+            if (!isSelecting) return;
+            
+            const currentX = e.clientX;
+            const currentY = e.clientY;
+            const w = Math.abs(currentX - startX);
+            const h = Math.abs(currentY - startY);
+            const x = Math.min(startX, currentX);
+            const y = Math.min(startY, currentY);
+            
+            updateSelection(x, y, w, h);
+            currentBox = { x, y, w, h };
+        });
+
+        // 鼠标松开
+        document.addEventListener('mouseup', async (e) => {
+            if (!isSelecting) return;
+            isSelecting = false;
+            
+            // 如果选区太小，忽略
+            if (currentBox.w < 10 || currentBox.h < 10) {
+                updateSelection(0, 0, 0, 0);
+                return;
+            }
+            
+            // 发送选区坐标并截图
+            try {
+                const imageData = await window.selectionAPI.confirmSelection(
+                    Math.floor(currentBox.x),
+                    Math.floor(currentBox.y),
+                    Math.floor(currentBox.w),
+                    Math.floor(currentBox.h)
+                );
+                
+                if (imageData) {
+                    // 将截图数据发送给主窗口
+                    window.selectionAPI.sendImageData(imageData);
+                }
+            } catch (err) {
+                console.error('截图失败:', err);
+            }
+            
+            // 关闭选择器
+            window.selectionAPI.close();
+        });
+
+        // ESC 取消
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                window.selectionAPI.close();
+            }
+        });
+    </script>
+</body>
+</html>

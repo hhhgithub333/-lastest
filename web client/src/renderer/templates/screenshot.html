@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="white" stroke="black" stroke-width="1.5" d="M12 2v20M2 12h20"/></svg>') 12 12, crosshair;
+            user-select: none;
+        }
+        canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+        .info {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            z-index: 1000;
+            pointer-events: none;
+        }
+        .coord-info {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(0,0,0,0.7);
+            color: #0f0;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+            z-index: 1000;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <div class="info">🎯 拖动鼠标选择区域 | ESC 取消</div>
+    <div class="coord-info" id="coordInfo">等待选择...</div>
+    <script>
+        // 注意：以下是 Electron 环境的代码，使用 require('electron')
+        // 如果要在普通浏览器运行，需要替换 ipcRenderer 部分
+        
+        const { ipcRenderer } = require('electron');
+        
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const coordInfo = document.getElementById('coordInfo');
+        
+        // 设置 canvas 大小为窗口大小
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        
+        let bgImage = null;
+        let startX = 0, startY = 0;
+        let endX = 0, endY = 0;
+        let selecting = false;
+        
+        // 从 URL 参数获取图片数据
+        const urlParams = new URLSearchParams(window.location.search);
+        const imageDataURL = urlParams.get('image');
+        
+        // 加载背景图
+        const img = new Image();
+        img.onload = () => {
+            bgImage = img;
+            // 绘制背景和遮罩
+            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = 'rgba(0,0,0,0.5)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+        };
+        
+        if (imageDataURL) {
+            img.src = decodeURIComponent(imageDataURL);
+        } else {
+            console.error('未提供图片数据');
+            coordInfo.innerHTML = '❌ 错误：未接收到截图数据';
+        }
+        
+        function drawSelection() {
+            if (!bgImage) return;
+            
+            // 重绘背景
+            ctx.drawImage(bgImage, 0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = 'rgba(0,0,0,0.5)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // 计算选择区域
+            const x = Math.min(startX, endX);
+            const y = Math.min(startY, endY);
+            const w = Math.abs(endX - startX);
+            const h = Math.abs(endY - startY);
+            
+            if (w > 0 && h > 0) {
+                // 清除选择区域的遮罩
+                ctx.clearRect(x, y, w, h);
+                // 绘制选择区域边框
+                ctx.strokeStyle = '#fff';
+                ctx.lineWidth = 2;
+                ctx.strokeRect(x, y, w, h);
+                
+                // 绘制半透明填充
+                ctx.fillStyle = 'rgba(255,255,255,0.1)';
+                ctx.fillRect(x, y, w, h);
+                
+                // 显示尺寸信息
+                ctx.fillStyle = 'rgba(0,0,0,0.7)';
+                ctx.fillRect(x + w + 5, y - 25, 120, 22);
+                ctx.fillStyle = '#fff';
+                ctx.font = '12px monospace';
+                ctx.fillText(w + ' × ' + h, x + w + 10, y - 10);
+                
+                // 更新坐标信息
+                coordInfo.innerHTML = '📐 区域: ' + x + ',' + y + ' → ' + (x+w) + ',' + (y+h) + '<br>📏 尺寸: ' + w + ' × ' + h;
+            }
+        }
+        
+        canvas.addEventListener('mousedown', (e) => {
+            e.preventDefault();
+            selecting = true;
+            startX = e.clientX;
+            startY = e.clientY;
+            endX = startX;
+            endY = startY;
+            drawSelection();
+        });
+        
+        canvas.addEventListener('mousemove', (e) => {
+            if (!selecting) return;
+            e.preventDefault();
+            endX = e.clientX;
+            endY = e.clientY;
+            drawSelection();
+        });
+        
+        canvas.addEventListener('mouseup', (e) => {
+            if (!selecting) return;
+            e.preventDefault();
+            selecting = false;
+            
+            const x = Math.min(startX, endX);
+            const y = Math.min(startY, endY);
+            const w = Math.abs(endX - startX);
+            const h = Math.abs(endY - startY);
+            
+            console.log('用户选择区域:', { x, y, w, h });
+            coordInfo.innerHTML = '✅ 已选择: ' + x + ',' + y + ' ' + w + '×' + h;
+            
+            if (w > 10 && h > 10) {
+                ipcRenderer.send('selection-complete', { x, y, width: w, height: h });
+            } else {
+                console.log('选择区域太小，取消');
+                ipcRenderer.send('selection-cancel');
+            }
+        });
+        
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                console.log('ESC 取消截图');
+                ipcRenderer.send('selection-cancel');
+            }
+        });
+        
+        // 鼠标移动时显示实时坐标
+        canvas.addEventListener('mousemove', (e) => {
+            if (!selecting) {
+                coordInfo.innerHTML = '🖱️ 坐标: ' + e.clientX + ', ' + e.clientY;
+            }
+        });
+        
+        // 窗口大小改变时重新调整
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            if (bgImage) {
+                ctx.drawImage(bgImage, 0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = 'rgba(0,0,0,0.5)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+            }
+        });
+        
+        console.log('选择界面已加载，屏幕尺寸:', canvas.width, 'x', canvas.height);
+    </script>
+</body>
+</html>

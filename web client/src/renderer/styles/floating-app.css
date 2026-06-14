@@ -1,0 +1,124 @@
+.floating-window {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px 40px 12px 14px;
+  background: linear-gradient(135deg, rgba(30, 30, 50, 0.95), rgba(20, 20, 35, 0.98));
+  border-radius: 20px;
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow:
+      0 0 20px rgba(99, 102, 241, 0.15),
+      0 0 40px rgba(99, 102, 241, 0.1),
+      0 8px 32px rgba(0, 0, 0, 0.4);
+  -webkit-app-region: drag;
+  transition: all 0.3s ease;
+  min-height: 120px;
+}
+
+.floating-window:hover {
+  border-color: rgba(99, 102, 241, 0.3);
+}
+
+/* 关闭按钮 */
+.btn-close {
+  position: absolute;
+  right: 8px;
+  top: 12px;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  background: rgba(255, 255, 255, 0.05);
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  -webkit-app-region: no-drag;
+}
+
+.btn-close svg {
+  width: 12px;
+  height: 12px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.btn-close:hover {
+  background: rgba(239, 68, 68, 0.3);
+}
+
+.btn-close:hover svg {
+  color: #ef4444;
+}
+
+/* ========== 进度条 ========== */
+.progress-section {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 0 4px;
+}
+
+.progress-bar-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  -webkit-app-region: no-drag;
+}
+
+.time-label {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.5);
+  min-width: 28px;
+  font-variant-numeric: tabular-nums;
+  font-family: 'SF Mono', 'Menlo', monospace;
+  flex-shrink: 0;
+}
+
+/* 自定义 range 滑块样式 */
+.progress-slider {
+  flex: 1;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 4px;
+  border-radius: 2px;
+  outline: none;
+  cursor: pointer;
+  background: linear-gradient(
+    to right,
+    #6366f1 0%,
+    #6366f1 var(--progress, 0%),
+    rgba(255, 255, 255, 0.15) var(--progress, 0%),
+    rgba(255, 255, 255, 0.15) 100%
+  );
+}
+
+.progress-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #ffffff;
+  cursor: pointer;
+  box-shadow: 0 0 4px rgba(99, 102, 241, 0.8), 0 0 8px rgba(99, 102, 241, 0.4);
+  transition: transform 0.1s;
+}
+
+.progress-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+}
+
+.progress-slider::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #ffffff;
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 0 4px rgba(99, 102, 241, 0.8);
+}
+

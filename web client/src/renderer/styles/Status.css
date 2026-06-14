@@ -1,0 +1,288 @@
+.status-page {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 32px 20px;
+}
+
+/* 页面标题 - 浅色版本 */
+.page-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 32px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid #000;  /* 黑色实线 */
+}
+
+.header-icon {
+  width: 48px;
+  height: 48px;
+  padding: 12px;
+  background: rgba(99, 102, 241, 0.1);  /* 浅色背景用淡紫色 */
+  border-radius: 14px;
+  border: 1px solid #000;
+}
+
+.header-icon svg {
+  width: 100%;
+  height: 100%;
+  color: #6366f1;  /* 深色图标 */
+}
+
+.header-text h1 {
+  font-size: 24px;
+  font-weight: 600;
+  color: #000;  /* 纯黑文字 */
+  margin: 0 0 4px;
+}
+
+.header-text p {
+  font-size: 13px;
+  color: rgba(0, 0, 0, 0.6);  /* 深灰色 */
+  margin: 0;
+}
+
+/* 状态卡片容器 */
+.cards-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+/* 状态卡片 - 浅色背景，黑色边框 */
+.status-card {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 20px;
+  padding: 24px;
+  border: 1px solid #000;  /* 黑色实线 */
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.status-card:hover {
+  background: #ffffff;
+  border-color: #000;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+.status-card.connected {
+  border-color: #000;  /* 保持黑色，但可以保留原绿色高亮？按照需求只加黑色，不改变原逻辑，但可加粗边框可选 */
+  /* 原绿色边框效果可改为黑色+绿色阴影，但需求是边框全黑，所以只保留黑色 */
+}
+
+.status-card.connected .card-icon {
+  background: rgba(34, 197, 94, 0.1);
+  border-color: #000;
+}
+
+.status-card.connected .card-icon svg {
+  color: #16a34a;  /* 绿色图标 */
+}
+
+.card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+}
+
+.card-icon {
+  width: 44px;
+  height: 44px;
+  padding: 10px;
+  background: rgba(99, 102, 241, 0.1);
+  border-radius: 12px;
+  border: 1px solid #000;
+}
+
+.card-icon svg {
+  width: 100%;
+  height: 100%;
+  color: #6366f1;
+}
+
+/* 状态指示器 - 深色文字 */
+.status-indicator {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.status-indicator .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+
+.status-indicator.online {
+  background: rgba(34, 197, 94, 0.15);
+  color: #16a34a;
+}
+
+.status-indicator.online .dot {
+  background: #22c55e;
+  box-shadow: 0 0 6px #22c55e;
+  animation: pulse 2s infinite;
+}
+
+.status-indicator.offline {
+  background: rgba(239, 68, 68, 0.1);
+  color: #dc2626;
+}
+
+.status-indicator.offline .dot {
+  background: #ef4444;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.status-card h3 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #000;
+  margin: 0 0 8px;
+}
+
+.status-card p {
+  font-size: 13px;
+  color: rgba(0, 0, 0, 0.65);
+  margin: 0;
+  line-height: 1.5;
+}
+
+.server-url {
+  font-family: 'SF Mono', 'Consolas', monospace;
+  font-size: 12px !important;
+  padding: 6px 10px;
+  background: rgba(0, 0, 0, 0.03);
+  border-radius: 6px;
+  display: inline-block;
+  margin-bottom: 12px !important;
+  color: rgba(0, 0, 0, 0.8);
+  border: 1px solid #000;
+}
+
+/* 按钮 - 保持原有渐变，边框黑色 */
+.btn-action {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 16px;
+  padding: 10px 18px;
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  color: white;
+  border: 1px solid #000;  /* 黑色边框 */
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-action svg {
+  width: 16px;
+  height: 16px;
+}
+
+.btn-action:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(34, 197, 94, 0.4);
+}
+
+.btn-refresh {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 16px;
+  padding: 10px 18px;
+  background: rgba(99, 102, 241, 0.1);
+  color: #6366f1;
+  border: 1px solid #000;  /* 黑色边框 */
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-refresh svg {
+  width: 16px;
+  height: 16px;
+}
+
+.btn-refresh:hover {
+  background: rgba(99, 102, 241, 0.2);
+  border-color: #000;
+}
+
+.btn-refresh.loading svg {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* 提示区域 - 浅色半透明，黑色边框 */
+.tips-section {
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 16px;
+  padding: 20px 24px;
+  border: 1px solid #000;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+}
+
+.tips-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+  color: #000;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.tips-header svg {
+  width: 16px;
+  height: 16px;
+  color: #6366f1;
+}
+
+.tips-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.tip-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  font-size: 13px;
+  color: rgba(0, 0, 0, 0.7);
+  line-height: 1.5;
+}
+
+.tip-bullet {
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  padding: 4px;
+  background: rgba(99, 102, 241, 0.1);
+  border-radius: 6px;
+  font-size: 10px;
+  font-weight: 600;
+  color: #6366f1;
+  text-align: center;
+  line-height: 14px;
+  border: 1px solid #000;
+}

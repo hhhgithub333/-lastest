@@ -1,0 +1,28 @@
+{
+  "name": "graduation-web",
+  "version": "1.0.0",
+  "description": "屏幕文字捕获 - Electron 桌面端",
+  "main": "src/main/main.js",
+  "scripts": {
+    "dev": "chcp 65001 && vite",
+    "electron:dev": "cross-env NODE_ENV=development electron .",
+    "build": "vite build",
+    "electron:build": "npm run build && electron-builder"
+  },
+  "keywords": ["tts", "ocr", "electron", "vue"],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.0.0",
+    "cross-env": "^7.0.3",
+    "electron": "^28.0.0",
+    "vite": "^5.0.0"
+  },
+  "dependencies": {
+    "axios": "^1.6.0",
+    "pinia": "^2.1.0",
+    "tesseract.js": "^5.0.0",
+    "vue": "^3.4.0",
+    "vue-router": "^4.2.0"
+  }
+}
