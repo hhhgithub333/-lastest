@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/floating_root"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/drag_handle_bg"
+    android:elevation="24dp"
+    android:padding="0dp">
+
+    <!-- 顶部拖动把手区域 -->
+    <RelativeLayout
+        android:id="@+id/drag_handle_area"
+        android:layout_width="match_parent"
+        android:layout_height="36dp"
+        android:background="#1A1A2E">
+
+        <!-- 居中拖动条 -->
+        <View
+            android:layout_width="36dp"
+            android:layout_height="4dp"
+            android:background="#4A4A6A"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="14dp"
+            android:layout_alignParentTop="true" />
+
+        <!-- 关闭按钮（右上角） -->
+        <ImageButton
+            android:id="@+id/btn_close"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="@drawable/btn_close_bg"
+            android:src="@drawable/ic_close"
+            android:scaleType="center"
+            android:contentDescription="关闭"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="6dp" />
+
+    </RelativeLayout>
+
+    <!-- 分割线 -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#2A2A3E" />
+
+    <!-- 状态行 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="12dp"
+        android:paddingTop="6dp"
+        android:paddingBottom="4dp">
+
+        <TextView
+            android:id="@+id/tv_status"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="● 已就绪"
+            android:textSize="16sp"
+            android:textColor="#4CAF50"
+            android:letterSpacing="0.02" />
+
+        <TextView
+            android:id="@+id/tv_current_settings"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="请先设置模型"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp" />
+
+    </LinearLayout>
+
+    <!-- ========== 进度条区域 ========== -->
+    <LinearLayout
+        android:id="@+id/layout_progress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="12dp"
+        android:paddingTop="0dp"
+        android:paddingBottom="4dp"
+        android:visibility="gone">
+
+        <!-- 当前时间 -->
+        <TextView
+            android:id="@+id/tv_current_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0:00"
+            android:textSize="11sp"
+            android:textColor="#7A7A9A"
+            android:minWidth="32dp"
+            android:gravity="center" />
+
+        <!-- 进度条 SeekBar -->
+        <SeekBar
+            android:id="@+id/seekbar_progress"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginHorizontal="8dp"
+            android:max="100"
+            android:progress="0"
+            android:progressTint="#6366F1"
+            android:thumbTint="#FFFFFF"
+            android:progressBackgroundTint="#3A3A5A" />
+
+        <!-- 总时长 -->
+        <TextView
+            android:id="@+id/tv_total_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0:00"
+            android:textSize="11sp"
+            android:textColor="#7A7A9A"
+            android:minWidth="32dp"
+            android:gravity="center" />
+
+    </LinearLayout>
+
+    <!-- 控制按钮栏 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingHorizontal="16dp">
+
+        <!-- 倍速按钮 -->
+        <ImageButton
+            android:id="@+id/btn_speed"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginLeft="40dp"
+            android:background="#2A2A3E"
+            android:contentDescription="调整朗读速度"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_speed" />
+
+        <!-- 倍速显示文字 -->
+        <TextView
+            android:id="@+id/tv_speed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="48dp"
+            android:text="倍速1.0x"
+            android:textColor="#7A7A9A"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <!-- 播放/暂停按钮（主操作，最大） -->
+        <ImageButton
+            android:id="@+id/btn_play_pause"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_marginEnd="20dp"
+            android:background="@drawable/button_play"
+            android:contentDescription="播放或暂停朗读"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_play" />
+
+        <!-- 停止按钮 -->
+        <ImageButton
+            android:id="@+id/btn_stop"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/button_stop"
+            android:contentDescription="停止朗读"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_stop" />
+
+        <!-- 下载按钮 -->
+        <ImageButton
+            android:id="@+id/btn_download"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@drawable/button_download"
+            android:contentDescription="下载当前音频"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_download" />
+
+    </LinearLayout>
+
+</LinearLayout>
