@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_home"
+            android:icon="@drawable/ic_home"
+            android:title="主页" />
+
+        <item
+            android:id="@+id/nav_text_content"
+            android:icon="@drawable/ic_text"
+            android:title="文本内容" />
+
+        <item
+            android:id="@+id/nav_tts"
+            android:icon="@drawable/ic_tts"
+            android:title="TTS设置" />
+
+        <item
+            android:id="@+id/nav_status"
+            android:icon="@drawable/ic_status"
+            android:title="权限设置" />
+        <item
+            android:id="@+id/nav_tips"
+            android:icon="@drawable/ic_tips"
+            android:title="使用帮助" />
+
+        <!-- 账号管理 -->
+        <item android:title="账号管理">
+            <menu>
+                <item
+                    android:id="@+id/nav_user_center"
+                    android:icon="@drawable/ic_user"
+                    android:title="个人中心" />
+                <item
+                    android:id="@+id/nav_logout"
+                    android:icon="@drawable/ic_logout"
+                    android:title="退出登录" />
+            </menu>
+        </item>
+
+    </group>
+
+</menu>
